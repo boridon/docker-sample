@@ -83,14 +83,14 @@ services:
     image: sample/fluentd
     build:
       context: build/fluentd
+    container_name:
+      sample_fluentd
     volumes:
       # sample_nginxログをマウントします
       - ./volumes/nginx/log:/var/log/nginx:ro
 #     - ./volumes/fluentd/log/:/fluentd/log
     depends_on:
       - sample_elasticsearch
-    container_name:
-      sample_fluentd
 
   sample_elasticsearch:
     image:
@@ -126,4 +126,4 @@ services:
       - sample_mysql:db
     container_name:
       sample_myadmin
-    
+
