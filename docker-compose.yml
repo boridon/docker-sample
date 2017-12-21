@@ -65,7 +65,7 @@ services:
     volumes:
       - ./configs/mysql/conf.d:/etc/mysql/conf.d:ro
       - ./configs/mysql/initdb.d:/docker-entrypoint-initdb.d:ro
-      - ./volumes/mysql/data:/var/lib/mysql:rw
+#     - ./volumes/mysql/data:/var/lib/mysql:rw
 #     - ./volumes/mysql/log:/var/log/mysql:rw
 
   sample_redis:
@@ -76,7 +76,7 @@ services:
     container_name:
       sample_redis
     volumes:
-      - ./volumes/redis/data:/var/lib/redis:rw
+#     - ./volumes/redis/data:/var/lib/redis:rw
       - ./volumes/redis/log:/var/log/redis:rw
 
   sample_fluentd:
