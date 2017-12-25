@@ -1,4 +1,4 @@
-FROM fluent/fluentd:latest-onbuild
+FROM fluent/fluentd:latest
 
 RUN apk add --update --virtual .build-deps sudo build-base ruby-dev \
  && sudo gem install fluent-plugin-elasticsearch \
@@ -6,5 +6,3 @@ RUN apk add --update --virtual .build-deps sudo build-base ruby-dev \
  && apk del .build-deps \
  && rm -rf /var/cache/apk/* /home/fluent/.gem/ruby/2.3.0/cache/*.gem
 
-# 元イメージのONBUILDコマンドでコピー済み
-# COPY fluent.conf /fluentd/etc/

@@ -11,11 +11,12 @@
 
 elasticsearchがメモリを結構消費するので4Gぐらいは必要そうです。
 
-## nginx
+## nginx (1.13.x)
 
-CentOS7 に epelリポジトリを追加して、nginx を yumインストール、confファイルの差し替えをしています
-
-※公式イメージでもコンテナの/etc/nginx/ 以下のconfディレクトリをホストのディレクトリで上書きマウントすれば自分でイメージ作成する必要がないかも？
+公式イメージに、ホスト側に用意した
+- /etc/nginx/nginx.conf
+- /etc/nginx/cond.d/
+をマウントして(上書き)実行します
 
 ## app (php-fpm)
 
@@ -40,33 +41,32 @@ app 環境とほぼ同じで、phalcon devtoolsのセットアップも行われ
 ログアウトするとコンテナが消える設定にしていますので、
 VOLUME指定してる /home/docker/project 以外は元に戻ります
 
-## mysql
+## mysql (5.7.x)
 
 最初はCentOS7 に mysql-community-server をyumインストールしていましたが、イメージサイズが思ったより大きく(1.2G)
 docker stop でちゃんと停止しない、など問題が多かったので公式イメージをつかっています。
 
 特定ディレクトリをマウントさせれば、my.confのカスタマイズ、初期化sqlの実行などできるので便利ですね
 
-## redis
+データベースのディレクトリをホストのVOLUMEでマウントすればコンテナの破棄をおこなってもデータを保持することができます
 
-CentoOS7 + 4.0ソースで構築してます
+## redis (4.0.x)
 
-※公式イメージがあるのでそっちを使ったほうがいいかも
+CentOS7 + 4.0ソースで構築してましたが、公式イメージに変更しました。
+特にconfなどは変更していないので起動しているだけです。
 
-## fluentd
+## fluentd (latest)
 
 ビルド済みイメージ使ってます(fluent/fluentd)
 
 elasticsearchのプラグインを入れたりするので、そこからさらにビルドをおこなっています。
-
-fluentd.conf も書き換えしています
 
 nginxコンテナのログディレクトリをホストのディレクトリでマウントしておき、
 それをfluentdのコンテナにも共有してtailさせてます
 
 送信先は elasticearch コンテナに送ってます
 
-## elasticsearch
+## elasticsearch (5.x)
 
 公式イメージ
 
@@ -74,7 +74,7 @@ nginxコンテナのログディレクトリをホストのディレクトリで
 
 APIはkibanaからしかアクセスしないのでポートフォワードなども設定してません
 
-## kibana
+## kibana (5.x)
 
 公式イメージ
 
@@ -82,7 +82,7 @@ APIはkibanaからしかアクセスしないのでポートフォワードな�
 
 5601 でポートフォワードしています
 
-## phpmyadmin
+## phpmyadmin (latest)
 
 ビルド済みイメージ(phpmyadmin/phpmyadmin)
 

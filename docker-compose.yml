@@ -1,11 +1,22 @@
 version: "2"
 services:
 
+#  sample_nginx:
+#    image:
+#      sample/nginx
+#    build:
+#      build/nginx
+#    ports:
+#      - 80:80
+#    container_name:
+#      sample_nginx
+#    depends_on:
+#      - sample_app
+#    volumes:
+#      - ./volumes/nginx/log:/var/log/nginx:rw
   sample_nginx:
     image:
-      sample/nginx
-    build:
-      build/nginx
+      nginx:1.13
     ports:
       - 80:80
     container_name:
@@ -13,6 +24,8 @@ services:
     depends_on:
       - sample_app
     volumes:
+      - ./configs/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./configs/nginx/conf.d:/etc/nginx/conf.d:ro
       - ./volumes/nginx/log:/var/log/nginx:rw
 
   sample_app:
@@ -41,7 +54,7 @@ services:
     environment:
       APP_ENV: local
     volumes:
-      - ./project:/home/docker/project:ro
+      - ./project:/home/docker/project:rw
 
 #  sample_mysql:
 #    image:
@@ -68,16 +81,24 @@ services:
 #     - ./volumes/mysql/data:/var/lib/mysql:rw
 #     - ./volumes/mysql/log:/var/log/mysql:rw
 
+#  sample_redis:
+#    image:
+#      sample/redis
+#    build:
+#      build/redis
+#    container_name:
+#      sample_redis
+#    volumes:
+##     - ./volumes/redis/data:/var/lib/redis:rw
+#      - ./volumes/redis/log:/var/log/redis:rw
   sample_redis:
     image:
-      sample/redis
-    build:
-      build/redis
+      redis:4
     container_name:
       sample_redis
     volumes:
-#     - ./volumes/redis/data:/var/lib/redis:rw
       - ./volumes/redis/log:/var/log/redis:rw
+#     - ./volumes/redis/data:/var/lib/redis:rw
 
   sample_fluentd:
     image: sample/fluentd
@@ -86,6 +107,7 @@ services:
     container_name:
       sample_fluentd
     volumes:
+      - ./configs/fluentd/fluent.conf:/fluentd/etc/fluent.conf:ro
       # sample_nginxログをマウントします
       - ./volumes/nginx/log:/var/log/nginx:ro
 #     - ./volumes/fluentd/log/:/fluentd/log
