@@ -6,7 +6,8 @@ RUN yum -y update && \
   yum install -y http://rpms.famillecollet.com/enterprise/remi-release-7.rpm && \
   yum install -y --enablerepo=remi-php72 php-cli php-json php-mbstring \
     php-mysqlnd php-opcache php-pecl-apcu php-pecl-igbinary php-pecl-redis \
-    php-phalcon3 git mysql vim
+    php-phalcon3 \
+    git mysql vim cronie sudo
 
 ARG VERSION="4.0.6"
 ARG BUILD_PACKAGE="gcc make"
@@ -27,10 +28,11 @@ RUN cd /root && \
 COPY php.ini /etc/php.ini
 
 RUN useradd -ms /bin/bash docker
-USER docker
 ENV TERM=xterm \
   HOME=/home/docker \
   LANG=C.UTF-8
+RUN echo 'docker ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+USER docker
 WORKDIR /home/docker/
 
 RUN git clone git://github.com/phalcon/phalcon-devtools.git && \
@@ -38,3 +40,6 @@ RUN git clone git://github.com/phalcon/phalcon-devtools.git && \
   sh ./phalcon.sh
 
 VOLUME  /home/docker/project
+
+CMD sudo crond && tail -f /dev/null
+
